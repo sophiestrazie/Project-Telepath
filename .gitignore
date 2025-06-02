@@ -1,4 +1,14 @@
+# Ignore video, neuroimaging, and other large data files
 algonauts_2025/
 *.mkv
 *.h5
 *.nii
+*.zip
+*.tar.gz
+*.DS_Store
+
+# Ignore metadata from Windows
+*.Zone.Identifier
+
+# Ignore Jupyter checkpoints
+.ipynb_checkpoints/
