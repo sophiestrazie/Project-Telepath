@@ -94,10 +94,3 @@ algonauts_2025/
 This prevents large files from being pushed to GitHub.
 
 ---
-
-## ❓ Need Help?
-
-If you’re having trouble with setup, feel free to:
-- Post in the team chat
-- Create a GitHub Issue
-- Ask Maria or the technical lead
