@@ -12,3 +12,6 @@ algonauts_2025/
 
 # Ignore Jupyter checkpoints
 .ipynb_checkpoints/
+
+*.pyc
+.env/

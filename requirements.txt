@@ -1,0 +1,1 @@
+-e git+https://github.com/marialagakos/AI4Good-MTL-Group-2@99e2cf6ed23abd1753bb94566b15aa9bb1c1eef7#egg=your_package_name
