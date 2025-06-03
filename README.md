@@ -5,14 +5,19 @@
 Create virtual environment and install dependencies:
 
 ```bash
-python -m venv NAME_OF_VENV
+python -m venv brain-env
 ```
 
 Activate the environement
 
 ```bash
-source .NAME_OF_VENV/bin/activate
+source .brain-env/bin/activate
 ```
+```PowerShell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.\brain-env\Scripts\Activate.ps1
+```
+
 
 Then install the package:
 
