@@ -14,7 +14,15 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies = []
+dependencies = [ "numpy",
+  "librosa",
+  "moviepy",
+  "tqdm",
+  "h5py",
+  "pandas",        # for transcript handling later
+  "opencv-python",  # for video info reading
+  "moviepy==1.0.3"
+  ]
 
 [project.urls]
 Homepage = ""
