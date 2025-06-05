@@ -14,7 +14,7 @@
 
 # scripts/run_feature_extraction_pipeline.py
 
-from your_package_name.audio import AudioConfig, AudioProcessor
+from multimodal_stimulus_fmri_prediction.audio import AudioConfig, AudioProcessor
 import os
 
 def main():
