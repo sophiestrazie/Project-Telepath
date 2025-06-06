@@ -2,10 +2,15 @@
 
 ## Install Instructions
 
+Using Python 3.10
+
 Create virtual environment and install dependencies:
 
 ```bash
 python -m venv brain-env
+```
+```bash
+python -m pip install --upgrade pip
 ```
 
 Activate the environement

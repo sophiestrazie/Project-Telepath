@@ -1,6 +1,11 @@
+#[build-system]
+#requires = ["hatchling >= 1.26"]
+#build-backend = "hatchling.build"
+
 [build-system]
-requires = ["hatchling >= 1.26"]
-build-backend = "hatchling.build"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 
 [project]
 name = "multimodal-stimulus-fmri-prediction"
@@ -14,16 +19,20 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies = [ "numpy",
+dependencies = [ "numpy==1.26.4",
   "librosa",
   "moviepy",
   "tqdm",
   "h5py",
   "pandas",        # for transcript handling later
   "opencv-python",  # for video info reading
-  "moviepy==1.0.3"
+  "moviepy==1.0.3",
+  "torch==2.0.1",
+  "torchvision==0.15.2",
+  "pytorchvideo==0.1.5"
+
   ]
 
 [project.urls]
-Homepage = ""
-Issues = ""
+Homepage = "https://github.com/marialagakos/AI4Good-MTL-Group-2"
+Issues = "https://github.com/marialagakos/AI4Good-MTL-Group-2/issues"

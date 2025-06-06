@@ -15,3 +15,7 @@ algonauts_2025/
 
 *.pyc
 .env/
+
+venv/
+
+multimodal_stimulus_fmri_prediction.egg-info/
