@@ -16,10 +16,11 @@
 
 from multimodal_stimulus_fmri_prediction.audio import AudioConfig, AudioProcessor
 from multimodal_stimulus_fmri_prediction.video import VideoConfig, VideoProcessor
+from multimodal_stimulus_fmri_prediction.language import LanguageConfig, LanguageProcessor
 import os
 
 def main():
-    episode_path = "data/movie/friends/friends_s01e01a.mkv"
+    #episode_path = "data/movie/friends/friends_s01e01a.mkv"
     episode_id = "s01e01a"
 
     # config = AudioConfig(
@@ -37,17 +38,34 @@ def main():
     # print("Audio feature extraction completed.")
     # print("Extracted feature shape:", features.shape)
 
-    video_config = VideoConfig()
+    # video_config = VideoConfig()
 
-    os.makedirs(video_config.save_dir_temp, exist_ok=True)
-    os.makedirs(video_config.save_dir_features, exist_ok=True)
+    # os.makedirs(video_config.save_dir_temp, exist_ok=True)
+    # os.makedirs(video_config.save_dir_features, exist_ok=True)
 
-    processor = VideoProcessor(video_config)
-    features = processor.process(episode_path)
-    processor.save_features(features, episode_id)
+    # processor = VideoProcessor(video_config)
+    # features = processor.process(episode_path)
+    # processor.save_features(features, episode_id)
 
-    print("Video feature extraction completed.")
-    print("Extracted feature shape:", features.shape)
+    # print("Video feature extraction completed.")
+    # print("Extracted feature shape:", features.shape)
+
+    # Other parameters
+    episode_path = "data/transcripts/friends_s01e01a.tsv"
+
+    num_used_tokens = 510
+    kept_tokens_last_hidden_state = 10
+
+    language_config = LanguageConfig(num_used_tokens=num_used_tokens, kept_tokens_last_hidden_state=kept_tokens_last_hidden_state)
+
+    os.makedirs(language_config.save_dir_features, exist_ok=True)
+
+    processor = LanguageProcessor(language_config)
+    pooler_output, last_hidden_state = processor.process(episode_path)
+    processor.save_features(pooler_output, last_hidden_state, episode_id)
+
+    print("Language feature extraction completed.")
+    print("Extracted feature shape:", pooler_output.shape)
 
 if __name__ == "__main__":
     main()

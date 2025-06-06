@@ -1,6 +1,5 @@
 # src/your_package_name/audio/extract.py
 
-# src/your_package_name/audio/extract.py
 
 import os
 import numpy as np

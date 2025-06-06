@@ -30,10 +30,16 @@ Then install the package:
 pip install -e .
 ```
 
-Install the dependencies:
+Install the dependencies (optional):
 
 ```bash
 pip install -r requirements.txt
 ```
+# Reminder: Every time change the content of multimodal_stimulus_fmri_predict, please run:
+
+```bash
+pip install -e .
+```
+
 
 ## How to run the code
