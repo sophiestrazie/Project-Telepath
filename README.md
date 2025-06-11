@@ -16,9 +16,13 @@ python -m pip install --upgrade pip
 Activate the environement
 
 ```bash
+# bash
 source .brain-env/bin/activate
 ```
+OR
+
 ```PowerShell
+# PowerShell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 .\brain-env\Scripts\Activate.ps1
 ```
@@ -27,19 +31,25 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 Then install the package:
 
 ```bash
-pip install -e .
+# bash
+pip install -e . # run each time multimodal_stimulus_fmri_predict is updated
+
 ```
 
 Install the dependencies (optional):
 
 ```bash
+#bash
 pip install -r requirements.txt
 ```
-# Reminder: Every time change the content of multimodal_stimulus_fmri_predict, please run:
-
-```bash
-pip install -e .
-```
-
 
 ## How to run the code
+
+
+## Backup: Pulling Repo
+
+```PowerShell
+git status
+
+git pull
+```

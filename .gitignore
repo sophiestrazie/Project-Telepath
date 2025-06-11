@@ -19,3 +19,5 @@ algonauts_2025/
 venv/
 
 multimodal_stimulus_fmri_prediction.egg-info/
+brain-env/
+#data/
