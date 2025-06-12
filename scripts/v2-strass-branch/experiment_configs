@@ -1,0 +1,64 @@
+# config/experiment_configs.yaml
+experiments:
+  baseline:
+    classifiers:
+      - type: "svm"
+        config:
+          C: 1.0
+          kernel: "rbf"
+          gamma: "scale"
+      - type: "random_forest"
+        config:
+          n_estimators: 100
+          max_depth: 10
+          random_state: 42
+      - type: "logistic_regression"
+        config:
+          C: 1.0
+          max_iter: 1000
+          random_state: 42
+    
+  neural_networks:
+    classifiers:
+      - type: "mlp"
+        config:
+          hidden_dims: [512, 256, 128]
+          dropout_rate: 0.3
+          learning_rate: 0.001
+          n_epochs: 100
+          batch_size: 32
+      - type: "cnn"
+        config:
+          n_filters: [64, 128, 256]
+          kernel_size: 3
+          dropout_rate: 0.5
+          learning_rate: 0.001
+          n_epochs: 100
+    
+  advanced:
+    classifiers:
+      - type: "transformer"
+        config:
+          d_model: 256
+          nhead: 8
+          num_layers: 6
+          dropout_rate: 0.1
+          learning_rate: 0.0001
+          n_epochs: 150
+
+data:
+  data_path: "data/raw"
+  preprocessed_path: "data/preprocessed"
+  test_size: 0.2
+  random_state: 42
+  
+preprocessing:
+  standardize: true
+  dimensionality_reduction:
+    method: "pca"  # or "ica", "umap", "none"
+    n_components: 1000
+  
+cross_validation:
+  n_folds: 5
+  shuffle: true
+  random_state: 42

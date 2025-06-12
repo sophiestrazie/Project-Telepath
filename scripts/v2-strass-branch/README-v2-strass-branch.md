@@ -482,16 +482,28 @@ black .
 The SVM optimization problem:
 
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 $$\min_{w,b,\xi} \frac{1}{2}||w||^2 + C\sum_{i=1}^{n}\xi_i$$
 ```
 Subject to:
 
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 $$y_i(w^T\phi(x_i) + b) \geq 1 - \xi_i, \quad \xi_i \geq 0$$
 ```
 Where:
 
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 - $w$: weight vector
 - $b$: bias term
 - $\xi_i$: slack variables
@@ -504,11 +516,19 @@ Where:
 Multi-class cross-entropy loss:
 
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 $$\mathcal{L} = -\frac{1}{N}\sum_{i=1}^{N}\sum_{k=1}^{K}y_{i,k}\log(\hat{y}_{i,k})$$
 ```
 
 Softmax activation:
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 $$\hat{y}_{i,k} = \frac{e^{z_{i,k}}}{\sum_{j=1}^{K}e^{z_{i,j}}}$$
 ```
 
@@ -517,11 +537,19 @@ $$\hat{y}_{i,k} = \frac{e^{z_{i,k}}}{\sum_{j=1}^{K}e^{z_{i,j}}}$$
 K-fold cross-validation score:
 
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 $$CV_{score} = \frac{1}{K}\sum_{k=1}^{K} \text{Accuracy}_k$$
 ```
 Standard error:
 
 ```latex
+\usepackage{amsmath}    % For environments like align, cases, etc.
+\usepackage{amssymb}    % For math symbols like \mathbb, \geq, etc.
+\usepackage{mathtools}  % For enhanced math functionality, optional but recommended
+
 $$SE = \sqrt{\frac{\sum_{k=1}^{K}(\text{Accuracy}_k - CV_{score})^2}{K-1}}$$
 ```
 
