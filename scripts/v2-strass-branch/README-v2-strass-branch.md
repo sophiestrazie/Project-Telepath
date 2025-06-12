@@ -39,8 +39,8 @@ This repository provides a modular, extensible framework for experimenting with 
 
 ```powershell
 # Clone the repository
-git clone https://github.com/your-username/multimodal-stimulus-fmri-predict.git
-cd multimodal-stimulus-fmri-predict
+git clone https://github.com/marialagakos/AI4Good-MTL-Group-2
+cd scripts/v2-strass-branch
 
 # Create virtual environment
 python -m venv brain-env
