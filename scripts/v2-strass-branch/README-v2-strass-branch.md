@@ -503,18 +503,27 @@ Where:
 
 Multi-class cross-entropy loss:
 
+```latex
 $$\mathcal{L} = -\frac{1}{N}\sum_{i=1}^{N}\sum_{k=1}^{K}y_{i,k}\log(\hat{y}_{i,k})$$
+```
 
 Softmax activation:
+```latex
 $$\hat{y}_{i,k} = \frac{e^{z_{i,k}}}{\sum_{j=1}^{K}e^{z_{i,j}}}$$
+```
 
 ### Cross-Validation
 
 K-fold cross-validation score:
-$$CV_{score} = \frac{1}{K}\sum_{k=1}^{K} \text{Accuracy}_k$$
 
+```latex
+$$CV_{score} = \frac{1}{K}\sum_{k=1}^{K} \text{Accuracy}_k$$
+```
 Standard error:
+
+```latex
 $$SE = \sqrt{\frac{\sum_{k=1}^{K}(\text{Accuracy}_k - CV_{score})^2}{K-1}}$$
+```
 
 ## 📈 Performance Expectations
 
