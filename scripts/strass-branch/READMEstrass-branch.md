@@ -12,7 +12,10 @@ A comprehensive, extensible framework for experimenting with different pretraine
 ### Installation
 
 ```powershell
+# PowerShell
+
 # Create and activate virtual environment
+ExecutionPolicy RemoteSigned -Scope Process # bypass 
 python -m venv brain-env
 .\brain-env\Scripts\Activate.ps1
 

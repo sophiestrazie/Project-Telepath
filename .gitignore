@@ -20,4 +20,6 @@ venv/
 
 multimodal_stimulus_fmri_prediction.egg-info/
 brain-env/
+.env/ 
+scripts/strass-branch/secrets-env-do.py/
 #data/
