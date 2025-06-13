@@ -24,7 +24,7 @@ dependencies = [ "numpy==1.26.4",
   "pandas",        # for transcript handling later
   "opencv-python",  # for video info reading
   "moviepy==1.0.3",
-  "torch==2.0.1",
+  "torch==2.1.1",
   "torchvision==0.15.2",
   "pytorchvideo==0.1.5",
   "transformers==4.33.3"

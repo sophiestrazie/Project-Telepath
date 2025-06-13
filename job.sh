@@ -27,4 +27,4 @@ cd $SCRATCH/AI4Good-MTL-Group-2
 pip install -e .
 
 # Run your Python script
-python \scripts\run_feature_extraction_pipeline.py
+python /scripts/run_feature_extraction_pipeline.py
