@@ -28,3 +28,6 @@ pip install -e .
 
 # Run your Python script
 python /scripts/run_feature_extraction_pipeline.py
+
+# Archive any output data and move it to your Project folder
+tar -cf $project/project-repo/data/results/result-archive.tar data/output/results.pt results.csv
