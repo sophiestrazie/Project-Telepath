@@ -125,8 +125,23 @@ def process_file(tsv_file, mkv_file, out_file):
     fmri_segment = fmri_chunks[seg_idx]
 
     aligned = align_modalities_with_fmri(embeddings_dict, fmri_segment)
-    torch.save(aligned, out_file)
 
+basename = os.path.splitext(os.path.basename(tsv_file))[0]  # e.g., 'friends_s01e01a'
+
+for modality in ["text", "vision", "audio"]:
+    data = aligned[modality]
+    out_path = os.path.join(OUTPUT_DIR, f"{basename}_{modality}_Image_Bind.h5")
+
+    if os.path.exists(out_path):
+        print(f"[SKIP] {out_path} already exists.")
+        continue
+
+    with h5py.File(out_path, "w") as f:
+        f.create_dataset("embedding", data=data.cpu().numpy())
+        f.attrs["modality"] = modality
+        f.attrs["episode"] = basename
+        f.attrs["shape"] = data.shape
+        print(f"[WRITE] Saved {out_path}")
 
 # Run processing
 process_file(TSV_PATH, MKV_PATH, OUTPUT_PATH)
