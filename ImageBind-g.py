@@ -16,8 +16,8 @@ from imagebind.data import (
 os.environ["PATH"] += os.pathsep + "/opt/homebrew/bin"  # For ffmpeg
 
 # Paths
-TSV_PATH = "/Users/catherinamedeiros/Documents/mila/data_algonaut/friends_s01e01a.tsv" #-> need to fix for the cluster 
-MKV_PATH = "/Users/catherinamedeiros/Documents/mila/data_algonaut/friends_s01e01a.mkv" #-> need to fix for the cluster 
+TSV_PATH = "scratch/algonauts_2025.competitors/friends.stimuli/s1/friends_s01e01a.tsv" #-> need to fix for the cluster 
+MKV_PATH = "scratch/algonauts_2025.competitors/friends.stimuli/s1/friends_s01e01a.tsv"" #-> need to fix for the cluster 
 OUTPUT_DIR = "/Users/catherinamedeiros/Documents/mila/data_algonaut" #-> need to fix for the cluster 
 CHECKPOINT_PATH = ".checkpoints/imagebind_huge.pth"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
