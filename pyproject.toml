@@ -14,6 +14,22 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+dependencies = [ "numpy==1.26.4",
+  "python-dotenv",          # access .env secret variables
+  "librosa",
+  "moviepy",
+  "tqdm",
+  "wandb == 0.20.1",
+  "h5py",
+  "pandas",        # for transcript handling later
+  "opencv-python",  # for video info reading
+  "moviepy==1.0.3",
+  "torch==2.1.1",
+  "torchvision==0.15.2",
+  "pytorchvideo==0.1.5",
+  "transformers==4.33.3"
+
+  ]
 
   dependencies = [
   "numpy==1.26.4",
