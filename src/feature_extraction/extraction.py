@@ -1179,10 +1179,10 @@ if __name__ == "__main__":
     path_s01e01a_video = "./s01e01a/friends_s01e01a.mkv"
     path_s01e01a_text = "./s01e01a/friends_s01e01a.tsv"
 
-    # feature_1 = extract_features_video(path_s01e01a_video, "s01e01a", "slow_r50","friends")
-    # print(feature_1)
-    # feature_2 = extract_features_audio(path_s01e01a_video, "s01e01a", "MFCCs", "friends")
-    # print(feature_2)
+    feature_1 = extract_features_video(path_s01e01a_video, "s01e01a", "slow_r50","friends")
+    print(feature_1)
+    feature_2 = extract_features_audio(path_s01e01a_video, "s01e01a", "MFCCs", "friends")
+    print(feature_2)
     feature_3 = extract_features_text(path_s01e01a_text, "s01e01a", "BERT", "friends")
     print(feature_3)
 
