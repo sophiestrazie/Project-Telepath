@@ -1176,15 +1176,60 @@ if __name__ == "__main__":
 
 
     # training
-    path_s01e01a_video = "./s01e01a/friends_s01e01a.mkv"
-    path_s01e01a_text = "./s01e01a/friends_s01e01a.tsv"
+    # path_s01e01a_video = "./s01e01a/friends_s01e01a.mkv"
+    # path_s01e01a_text = "./s01e01a/friends_s01e01a.tsv"
 
-    feature_1 = extract_features_video(path_s01e01a_video, "s01e01a", "slow_r50","friends")
-    print(feature_1)
-    feature_2 = extract_features_audio(path_s01e01a_video, "s01e01a", "MFCCs", "friends")
-    print(feature_2)
-    feature_3 = extract_features_text(path_s01e01a_text, "s01e01a", "BERT", "friends")
-    print(feature_3)
+    # path_s02e01a_video = "./s02e01a/friends_s02e01a.mkv"
+    # path_s02e01a_text = "./s02e01a/friends_s02e01a.tsv"
+
+    # path_s01e01b_video = "./s01e01b/friends_s01e01b.mkv"
+    # path_s01e01b_text = "./s01e01b/friends_s01e01b.tsv"
+
+    # path_s01e02a_video = "./s01e02a/friends_s01e02a.mkv"
+    # path_s01e02a_text = "./s01e02a/friends_s01e02a.tsv"
+
+    # path_s01e02b_video = "./s01e02b/friends_s01e02b.mkv"
+    # path_s01e02b_text = "./s01e02b/friends_s01e02b.tsv"
+
+    # feature_1 = extract_features_video(path_s01e01b_video, "s01e01b", "slow_r50","friends")
+    # print(feature_1)
+    # feature_2 = extract_features_audio(path_s01e01b_video, "s01e01b", "MFCCs", "friends")
+    # print(feature_2)
+    # feature_3 = extract_features_text(path_s01e01b_text, "s01e01b", "BERT", "friends")
+    # print(feature_3)
+
+    # feature_1 = extract_features_video(path_s01e02a_video, "s01e02a", "slow_r50","friends")
+    # print(feature_1)
+    # feature_2 = extract_features_audio(path_s01e02a_video, "s01e02a", "MFCCs", "friends")
+    # print(feature_2)
+    # feature_3 = extract_features_text(path_s01e02a_text, "s01e02a", "BERT", "friends")
+    # print(feature_3)
+
+    # feature_1 = extract_features_video(path_s01e02b_video, "s01e02b", "slow_r50","friends")
+    # print(feature_1)
+    # feature_2 = extract_features_audio(path_s01e02b_video, "s01e02b", "MFCCs", "friends")
+    # print(feature_2)
+    # feature_3 = extract_features_text(path_s01e02b_text, "s01e02b", "BERT", "friends")
+    # print(feature_3)
+
+
+    episodes = ["s01e01b", "s01e02a", "s01e02b"]
+
+    base_video_dir = "/Users/keyuliang/AI4GOOD/AI4Good-MTL-Group-2/algonauts_2025.competitors/stimuli/movies/friends/s1"
+    base_text_dir = "/Users/keyuliang/AI4GOOD/AI4Good-MTL-Group-2/algonauts_2025.competitors/stimuli/transcripts/friends/s1"
+
+    for episode in episodes:
+        video_path = f"{base_video_dir}/friends_{episode}.mkv"
+        text_path = f"{base_text_dir}/friends_{episode}.tsv"
+
+        feature_1 = extract_features_video(video_path, episode, "slow_r50", "friends")
+        print(feature_1)
+
+        feature_2 = extract_features_audio(video_path, episode, "MFCCs", "friends")
+        print(feature_2)
+
+        feature_3 = extract_features_text(text_path, episode, "BERT", "friends")
+        print(feature_3)
 
     # features_train, fmri_train = merge_features(1, "s01e01a", "train")    #subject = 1, video_id = "s01e01a"
 
