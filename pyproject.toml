@@ -31,6 +31,23 @@ dependencies = [ "numpy==1.26.4",
 
   ]
 
+  dependencies = [
+  "numpy==1.26.4",
+  "python-dotenv",
+  "librosa",
+  "moviepy==1.0.3",
+  "tqdm",
+  "wandb==0.20.1",
+  "h5py",
+  "pandas",
+  "opencv-python",
+  "torch==2.2.2",
+  "torchvision==0.17.2",
+  "pytorchvideo==0.1.5",
+  "transformers==4.38.2",
+  "sentence-transformers==2.5.1"
+]
+
 [project.urls]
 Homepage = "https://github.com/marialagakos/AI4Good-MTL-Group-2"
 Issues = "https://github.com/marialagakos/AI4Good-MTL-Group-2/issues"
