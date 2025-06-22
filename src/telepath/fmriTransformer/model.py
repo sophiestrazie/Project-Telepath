@@ -6,6 +6,7 @@ from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader, Dataset
 import torch.nn.functional as F
 
+
 # hyperparameters for transformer 
 class Config:
     def __init__(
@@ -79,20 +80,6 @@ class PositionalEncoding(nn.Module):
         return self.dropout(x)
     
 
-# to mask different batches of sequence to be same size
-def create_padding_masks(lengths, max_len):
-    r"""args:
-    lengths: in one batch, the array of the lengths of the sequences [5, 5, 4]
-    max_len: the maximum length in the lengths, 5 in this case
-    """
-    mask = torch.zeros(len(lengths), max_len, dtype = torch.bool)
-    for i, l in enumerate(lengths):
-        # only mask where the sequence is padded to max_length
-        mask[i, l:] = True
-    return mask
-
-### FMRI Transformer Model
-
 class FMRITransformerModel(nn.Module):
     def __init__(self, config: Config):
         super().__init__()
@@ -102,96 +89,72 @@ class FMRITransformerModel(nn.Module):
         self.pos_encoder = PositionalEncoding(config.d_model, config.dropout)
 
         self.transformer = nn.Transformer(
-            d_model = config.d_model,
-            nhead = config.nhead,
-            num_encoder_layers = config.nlayers,
-            num_decoder_layers = config.nlayers,
-            dim_feedforward = config.nhid,
-            dropout = config.dropout,
-            batch_first = True           
+            d_model=config.d_model,
+            nhead=config.nhead,
+            num_encoder_layers=config.nlayers,
+            num_decoder_layers=config.nlayers,
+            dim_feedforward=config.nhid,
+            dropout=config.dropout,
+            batch_first=True
         )
-    
-    def forward(self, input_seq, fmri_seq, src_lengths, tgt_lengths):
-        r"""
-        This function run the whole transformer stack on a whole batch of sequences
 
-        Note that the input_seq, fmri_seq is padded before enter this function to make sure
-        different lengths of vectors are padded to make sure in each batch, the sequences have same length
-        parameters:
-        input_seq: padded stimulus sequence in batch, shape: [batch, seq_len, feature_dimension]
-        fmri_seq: padded fmri sequence in batch, shape: [batch, seq_len, fmri_dimension]
-        src_lengths: the actual length of sequences in this input batch
-        tgt_lengths: the actual length of sequences in this ouput batch
+    def forward(
+        self,
+        input_seq,            # [B, T, input_dim]
+        fmri_seq,             # [B, T, output_dim]
+        src_lengths=None,     # optional, not used anymore
+        tgt_lengths=None,     # optional, not used anymore
+        src_padding_mask=None,  # [B, T]
+        tgt_padding_mask=None   # [B, T]
+    ):
         """
+        input_seq: [B, T, input_dim]
+        fmri_seq: [B, T, output_dim]
+        src_padding_mask: [B, T] (True = pad)
+        tgt_padding_mask: [B, T] (True = pad)
+        """
+        input_seq = self.pos_encoder(self.input_projection(input_seq))  # [B, T, d_model]
+        fmri_seq = self.pos_encoder(self.output_projection(fmri_seq))   # [B, T, d_model]
 
-        # project both input and ouput sequences to space (seq_len X model_d)
-        input_seq = self.pos_encoder(self.input_projection(input_seq))
-        fmri_seq = self.pos_encoder(self.output_projection(fmri_seq))
-
-        # create masks for padded input and output
-        input_mask = create_padding_masks(src_lengths, input_seq.size(1))
-        output_mask = create_padding_masks(tgt_lengths, fmri_seq.size(1))
-
-        # create casual mask to make sure in decoder self-attention no looking ahead of the sequence
-        causal_mask = torch.triu(
-            torch.full((fmri_seq.size(1), fmri_seq.size(1)), float('-inf')), diagonal=1
-        ).to(input_seq.device)
+        T = fmri_seq.size(1)
+        causal_mask = torch.triu(torch.ones(T, T, dtype=torch.bool, device=input_seq.device), diagonal=1)
 
         out = self.transformer(
             src=input_seq,
             tgt=fmri_seq,
             tgt_mask=causal_mask,
-            src_key_padding_mask=input_mask,   #encoder self-attetion
-            tgt_key_padding_mask=output_mask,  #decoder self-attetion
-            memory_key_padding_mask=input_mask # cross-attention
+            src_key_padding_mask=src_padding_mask,
+            tgt_key_padding_mask=tgt_padding_mask
         )
-        return self.regressor(out)
-    
+        return self.regressor(out)  # [B, T, output_dim]
+
     @torch.no_grad()
     def autoregressive_inference(self, input_seq, seq_len, start_token):
-        r""" This helps to autoregressively inference the fmri sequence step by step
-        
-        But note that this only process one sequence at a time, instead of a batch of sequences
-
-        input_seq: a sequence of input vectors shape: [1, input_seq_len, input_dim]
-        seq_len: the length of inferenced fmri length, same as input_seq_len here
-        start_token: should be the average fmri vector: [fmri_dim]
-
-        Return: a predicted fmri sequence: [1, seq_len, fmro_dim]
         """
-
-        input_seq = self.pos_encoder(self.input_projection(input_seq))
+        input_seq: [1, T_in, input_dim]
+        start_token: [output_dim]
+        Returns: [1, seq_len, output_dim]
+        """
+        input_seq = self.pos_encoder(self.input_projection(input_seq))  # [1, T_in, d_model]
         memory = self.transformer.encoder(input_seq)
 
-        tgt = start_token.unsqueeze(0).unsqueeze(0) # [fmri_dim] -> [1,1,fmri_dim]
-        
+        tgt = start_token.unsqueeze(0).unsqueeze(0)  # [1, 1, output_dim]
         outputs = []
+
         for t in range(seq_len):
-            tgt_proj = self.pos_encoder(self.output_projection(tgt))
-            tgt_mask = torch.triu(
-                torch.full((t+1, t+1), float('-inf'), device=input_seq.device), diagonal=1
-            )
+            tgt_proj = self.output_projection(tgt)        # [1, t+1, d_model]
+            tgt_proj = self.pos_encoder(tgt_proj)         # positional encoding
+
+            tgt_mask = torch.triu(torch.full((t + 1, t + 1), float('-inf'), device=input_seq.device), diagonal=1)
+
             decoder_out = self.transformer.decoder(
                 tgt=tgt_proj,
                 memory=memory,
                 tgt_mask=tgt_mask
             )
 
-            pred = self.regressor(decoder_out[:, -1:])
-            outputs.append(pred) # the start token would not join the ouputs
-
+            pred = self.regressor(decoder_out[:, -1:])  # predict last token
+            outputs.append(pred)
             tgt = torch.cat([tgt, pred], dim=1)
 
-        return torch.cat(outputs, dim=1)
-
-        
-
-
-
-# not done yet
-def pad_batch(sequences):
-    ...
-
-# not done yet
-def train_one_epoch(model):
-    ...
+        return torch.cat(outputs, dim=1)  # [1, seq_len, output_dim]
