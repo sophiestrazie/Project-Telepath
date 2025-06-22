@@ -12,17 +12,19 @@ from imagebind.data import (
     load_and_transform_audio_data,
 )
 
+
 # Base directories
-BASE_DIR = os.path.join("scratch", "algonauts_2025.competitors", "friends.stimuli", "s1")
-RESULTS_DIR = os.path.join("scratch", "ImageBind", "results")
-CHECKPOINT_PATH = ".checkpoints/imagebind_huge.pth"
+BASE_DIR_MKV = "/home/catmede/scratch/algonauts_2025.competitors/stimuli/movies/friends/s1"
+BASE_DIR_TSV = "/home/catmede/scratch/algonauts_2025.competitors/stimuli/transcripts/friends/s1"
+RESULTS_DIR = "/home/catmede/scratch/ImageBind/results"
+CHECKPOINT_PATH = "/home/catmede/scratch/ImageBind/imagebind/.checkpoints/imagebind_huge.pth"
 
 # Ensure output directory exists
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # File paths
-TSV_PATH = os.path.join(BASE_DIR, "friends_s01e01a.tsv")
-MKV_PATH = os.path.join(BASE_DIR, "friends_s01e01a.mkv")
+TSV_PATH = os.path.join(BASE_DIR_TSV, "friends_s01e01a.tsv")
+MKV_PATH = os.path.join(BASE_DIR_MKV, "friends_s01e01a.mkv")
 OUTPUT_PT_PATH = os.path.join(RESULTS_DIR, "friends_s01e01a.pt")
 
 # Config
