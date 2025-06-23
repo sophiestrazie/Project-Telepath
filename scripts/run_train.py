@@ -73,3 +73,9 @@ wandb.init(
 for epoch in range(config.num_epochs):
     train_one_epoch(model, train_loader, optimizer, config.device, epoch)
     evaluate(model, val_loader, config.device, epoch)
+
+    checkpoint_path = f"/content/checkpoints/epoch_{epoch+1}.pt"
+    torch.save(model.state_dict(), checkpoint_path)
+
+    # upload to WandB
+    wandb.save(checkpoint_path)  
