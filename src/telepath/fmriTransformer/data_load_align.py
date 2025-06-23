@@ -3,7 +3,8 @@ import math
 import numpy as np
 import h5py
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import DataLoader, Dataset
+from scipy.stats import pearsonr
 
 
 def load_stimulus_features(root_data_dir, modality, selected_episodes=None):
@@ -32,10 +33,10 @@ def load_stimulus_features(root_data_dir, modality, selected_episodes=None):
 
 def load_fmri(root_data_dir, subject, friends_episodes=None):
     fmri = {}
-    filename = f'sub-0{subject}_task-friends_space-MNI152NLin2009cAsym_atlas-Schaefer18_parcel-1000Par7Net_desc-s123456_bold.h5'
-    path = os.path.join(root_data_dir, 'fmri', filename)
+    friends_filename = f'sub-0{subject}_task-friends_space-MNI152NLin2009cAsym_atlas-Schaefer18_parcel-1000Par7Net_desc-s123456_bold.h5'
+    friends_path = os.path.join(root_data_dir, 'fmri', friends_filename)
 
-    with h5py.File(path, 'r') as f:
+    with h5py.File(friends_path, 'r') as f:
         for key, val in f.items():
             clip = str(key[13:])
             if friends_episodes is None or clip in friends_episodes:
@@ -47,7 +48,6 @@ def load_fmri(root_data_dir, subject, friends_episodes=None):
 def trim_and_concatenate_features(features_dict, fmri_dict, excluded_trs_start=0, excluded_trs_end=0, hrf_delay=0):
     aligned_features = []
     aligned_fmri = []
-
     all_episodes = set(fmri_dict.keys())
     for mod in features_dict:
         all_episodes &= set(features_dict[mod].keys())
@@ -56,7 +56,6 @@ def trim_and_concatenate_features(features_dict, fmri_dict, excluded_trs_start=0
         fmri = fmri_dict[ep]
         if len(fmri) <= excluded_trs_start + excluded_trs_end + hrf_delay:
             continue
-
         fmri_trimmed = fmri[excluded_trs_start : -excluded_trs_end or None]
         fmri_trimmed = fmri_trimmed[:len(fmri_trimmed) - hrf_delay]
 
@@ -69,10 +68,8 @@ def trim_and_concatenate_features(features_dict, fmri_dict, excluded_trs_start=0
             if len(feat) <= excluded_trs_start + excluded_trs_end + hrf_delay:
                 valid = False
                 break
-
             feat_trimmed = feat[excluded_trs_start : -excluded_trs_end or None]
             feat_trimmed = feat_trimmed[hrf_delay:]
-
             min_len = min(min_len, len(feat_trimmed))
             modality_features.append(feat_trimmed)
 
@@ -86,56 +83,33 @@ def trim_and_concatenate_features(features_dict, fmri_dict, excluded_trs_start=0
     return aligned_features, aligned_fmri
 
 
-def segment_sequence_with_masks(seq, window_size, stride):
+def segment_sequence(seq, window_size, stride):
     segments = []
     T, D = seq.shape
-
-    for start in range(0, T, stride):
+    for start in range(0, T - window_size + 1, stride):
         end = start + window_size
-        segment = seq[start:end]
-        valid_len = segment.shape[0]
-
-        if valid_len < window_size:
-            pad_len = window_size - valid_len
-            pad = segment.mean(dim=0, keepdim=True).repeat(pad_len, 1)
-            segment = torch.cat([segment, pad], dim=0)
-
-        mask = torch.zeros(window_size, dtype=torch.bool)
-        mask[valid_len:] = True
-
-        segments.append((segment, mask))
-
+        segments.append(seq[start:end])
     return segments
 
 
 class SlidingWindowFMRIDataset(Dataset):
-    def __init__(self, aligned_features, window_size=100, stride=50):
+    def __init__(self, full_data, window_size=100, stride=50):
         self.samples = []
-
-        for stim_seq, fmri_seq in aligned_features:
+        for stim_seq, fmri_seq in full_data:
             stim_seq = torch.tensor(stim_seq, dtype=torch.float32)
             fmri_seq = torch.tensor(fmri_seq, dtype=torch.float32)
 
-            stim_windows = segment_sequence_with_masks(stim_seq, window_size, stride)
-            fmri_windows = segment_sequence_with_masks(fmri_seq, window_size, stride)
+            stim_windows = segment_sequence(stim_seq, window_size, stride)
+            fmri_windows = segment_sequence(fmri_seq, window_size, stride)
 
-            for (stim, stim_mask), (fmri, fmri_mask) in zip(stim_windows, fmri_windows):
-                assert torch.equal(stim_mask, fmri_mask)
-                self.samples.append((stim, fmri, stim_mask))
+            for stim, fmri in zip(stim_windows, fmri_windows):
+                self.samples.append((stim, fmri))
 
     def __len__(self):
         return len(self.samples)
 
     def __getitem__(self, idx):
         return self.samples[idx]
-
-
-def collate_fn_with_window_masks(batch):
-    stim_batch, fmri_batch, masks = zip(*batch)
-    stim_batch = torch.stack(stim_batch)
-    fmri_batch = torch.stack(fmri_batch)
-    masks = torch.stack(masks)
-    return stim_batch, fmri_batch, masks, masks
 
 
 def prepare_and_save_aligned_data(
@@ -170,9 +144,18 @@ def prepare_and_save_aligned_data(
         pickle.dump((aligned_features, aligned_fmri), f)
 
     dataset = SlidingWindowFMRIDataset(
-        aligned_features=list(zip(aligned_features, aligned_fmri)),
+        full_data=list(zip(aligned_features, aligned_fmri)),
         window_size=window_size,
         stride=stride
     )
-    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_fn_with_window_masks)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, collate_fn=collate_fn_no_pad)
     return dataloader
+
+
+def collate_fn_no_pad(batch):
+    stim_batch, fmri_batch = zip(*batch)
+    stim_batch = torch.stack(stim_batch)
+    fmri_batch = torch.stack(fmri_batch)
+    return stim_batch, fmri_batch
+
+

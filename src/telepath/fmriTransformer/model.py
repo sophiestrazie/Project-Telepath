@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import math
-from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader, Dataset
 import torch.nn.functional as F
 
@@ -11,16 +10,16 @@ import torch.nn.functional as F
 class Config:
     def __init__(
         self,
-        input_dim=1024,
+        input_dim=520,
         output_dim=1000,
-        d_model=2000,
+        d_model=1000,
         nhead=4,
-        nhid=128,
+        nhid=4,
         nlayers=2,
         dropout=0.1,
         batch_size=4,
         lr=1e-3,
-        num_epochs=10,
+        num_epochs=5,
         device=None,
     ):
         self.input_dim = input_dim
@@ -35,23 +34,8 @@ class Config:
         self.num_epochs = num_epochs
         self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-#https://github.com/pytorch/examples/blob/main/word_language_model/model.py
+# https://github.com/pytorch/examples/blob/main/word_language_model/model.py
 class PositionalEncoding(nn.Module):
-    r"""Inject some information about the relative or absolute position of the tokens in the sequence.
-        The positional encodings have the same dimension as the embeddings, so that the two can be summed.
-        Here, we use sine and cosine functions of different frequencies.
-    .. math:
-        \text{PosEncoder}(pos, 2i) = sin(pos/10000^(2i/d_model))
-        \text{PosEncoder}(pos, 2i+1) = cos(pos/10000^(2i/d_model))
-        \text{where pos is the word position and i is the embed idx)
-    Args:
-        d_model: the embed dim (required).
-        dropout: the dropout value (default=0.1).
-        max_len: the max. length of the incoming sequence (default=5000).
-    Examples:
-        >>> pos_encoder = PositionalEncoding(d_model)
-    """
-
     def __init__(self, d_model, dropout=0.1, max_len=5000):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
@@ -65,20 +49,10 @@ class PositionalEncoding(nn.Module):
         self.register_buffer('pe', pe)
 
     def forward(self, x):
-        r"""Inputs of forward function
-        Args:
-            x: the sequence fed to the positional encoder model (required).
-        Shape:
-            x: [sequence length, batch size, embed dim]
-            output: [sequence length, batch size, embed dim]
-        Examples:
-            >>> output = pos_encoder(x)
-        """
-
-    # x: [batch, seq_len, d_model]
+        # x: [batch, seq_len, d_model]
         x = x + self.pe[:x.size(1), :].transpose(0, 1)  # [1, seq_len, d_model] to make sure batch first
         return self.dropout(x)
-    
+
 
 class FMRITransformerModel(nn.Module):
     def __init__(self, config: Config):
@@ -87,6 +61,8 @@ class FMRITransformerModel(nn.Module):
         self.output_projection = nn.Linear(config.output_dim, config.d_model)
         self.regressor = nn.Linear(config.d_model, config.output_dim)
         self.pos_encoder = PositionalEncoding(config.d_model, config.dropout)
+
+        self.output_dim = config.output_dim
 
         self.transformer = nn.Transformer(
             d_model=config.d_model,
@@ -101,18 +77,8 @@ class FMRITransformerModel(nn.Module):
     def forward(
         self,
         input_seq,            # [B, T, input_dim]
-        fmri_seq,             # [B, T, output_dim]
-        src_lengths=None,     # optional, not used anymore
-        tgt_lengths=None,     # optional, not used anymore
-        src_padding_mask=None,  # [B, T]
-        tgt_padding_mask=None   # [B, T]
+        fmri_seq              # [B, T, output_dim]
     ):
-        """
-        input_seq: [B, T, input_dim]
-        fmri_seq: [B, T, output_dim]
-        src_padding_mask: [B, T] (True = pad)
-        tgt_padding_mask: [B, T] (True = pad)
-        """
         input_seq = self.pos_encoder(self.input_projection(input_seq))  # [B, T, d_model]
         fmri_seq = self.pos_encoder(self.output_projection(fmri_seq))   # [B, T, d_model]
 
@@ -122,21 +88,22 @@ class FMRITransformerModel(nn.Module):
         out = self.transformer(
             src=input_seq,
             tgt=fmri_seq,
-            tgt_mask=causal_mask,
-            src_key_padding_mask=src_padding_mask,
-            tgt_key_padding_mask=tgt_padding_mask
+            tgt_mask=causal_mask
         )
         return self.regressor(out)  # [B, T, output_dim]
 
     @torch.no_grad()
-    def autoregressive_inference(self, input_seq, seq_len, start_token):
+    def autoregressive_inference(self, input_seq, seq_len, start_token=None):
         """
         input_seq: [1, T_in, input_dim]
-        start_token: [output_dim]
+        start_token: [output_dim] or None — if None, use a dummy start token
         Returns: [1, seq_len, output_dim]
         """
         input_seq = self.pos_encoder(self.input_projection(input_seq))  # [1, T_in, d_model]
         memory = self.transformer.encoder(input_seq)
+
+        if start_token is None:
+            start_token = torch.zeros(self.output_dim, device=input_seq.device)  # Dummy consistent token
 
         tgt = start_token.unsqueeze(0).unsqueeze(0)  # [1, 1, output_dim]
         outputs = []
