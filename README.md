@@ -1,129 +1,30 @@
-# AI4Good Lab - Project Cere
-
-*Montreal 2025*
-
-## 🧠 Project Overview
-
-This repository contains the work of **Project Cere** for the AI4Good Montreal program 2025 cohort. Our project focuses on developing and evaluating multimodal machine learning models that integrate visual, textual, and audio data to address real-world social challenges.
 
 
-## Table of Contents
+# 🧠 Project Cere
 
-What to expect in this repository:
+#### Multimodal AI for Social Good
 
-- [Installation and Usage](#installation-and-usage)
-- [Repository Structure](#repository-structure)
-- [Team Members](#team-members)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+*AI4Good Lab @Mila • Montreal 2025 Cohort*
 
-
-## 📂 Repository Structure
-
-
-## 🚀 Installation & Usage
-
-Using Python 3.10
-
-Create virtual environment and install dependencies:
-
-```bash
-python -m venv brain-env
-```
-```bash
-python -m pip install --upgrade pip
-```
-
-Activate the environement
-
-```bash
-# bash
-source .brain-env/bin/activate
-```
-OR
-
-```PowerShell
-# PowerShell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-.\brain-env\Scripts\Activate.ps1
-```
-
-
-Then install the package:
-
-```bash
-# bash
-pip install -e . # run each time multimodal_stimulus_fmri_predict is updated
-
-```
-
-Install the dependencies (optional):
-
-```bash
-#bash
-pip install -r requirements.txt
-```
-
-### How to run the code
-
-
-### Backup: Pulling Repo
-
-```PowerShell
-git status
-
-git pull
-```
-
-## Project Roadmap
-
-### Related Work
-
-### Data
-
-### Methodology
-
-### Performance 
-
-### Conclusion
-
-## 👥 Team Members
-
-[Team Member 1 Name] (GitHub Profile)
-
-[Team Member 2 Name] (GitHub Profile)
-
-[Team Member 3 Name] (GitHub Profile)
-
-[Team Member 4 Name] (GitHub Profile)
-
-## 📝 License
-This project is licensed under the [License Name] - see the LICENSE.md file for details.
-
-## 🙏 Acknowledgments
-AI4Good Montreal organizers and mentors
-
-[Any other organizations or individuals you want to acknowledge]
-
-
-
--------------------------
-
-
-
-
-# 🧠 Project Cere - Multimodal ML for Social Good
-
-*AI4Good Lab Montreal • 2025 Cohort*
-
-## 🌟 Project Overview
+## 🔍 Project Overview
 
 Project Cere develops **multimodal machine learning models** that integrate visual, textual, and audio data to address pressing social challenges. This repository contains our codebase, experiments, and documentation for creating interpretable AI systems with real-world impact.
+
+## ✨ Features
+
+- **Modular Architecture**: Easy to extend with new classifiers
+- **Multiple Classifier Types**: Classical ML, Neural Networks, and Ensemble methods
+- **Flexible Data Pipeline**: Support for various fMRI data formats
+- **Comprehensive Evaluation**: Cross-validation, metrics, and visualization
+- **Hyperparameter Optimization**: Built-in grid search capabilities
+- **Experiment Management**: YAML-based configuration system
+- **Extensible Design**: Factory pattern for seamless classifier addition
 
 ## 📋 Table of Contents
 
 - [Installation](#-installation)
 - [Repository Structure](#-repository-structure)
+- [Features](#-features)
 - [Usage](#-usage)
 - [Project Roadmap](#-project-roadmap)
 - [Team](#-team)
@@ -171,20 +72,51 @@ Project Cere develops **multimodal machine learning models** that integrate visu
 
 ```
 Project-Cere/
+├── main.py                 # Main execution script
+├── README.md               # Project documentation
 ├── data/                   # Raw and processed datasets
-│   ├── audio/              # Audio samples
-│   ├── text/               # Text corpora
-│   └── visual/             # Image/video data
-├── models/                 # Pretrained models and checkpoints
-├── notebooks/              # Exploratory analysis and prototyping
-├── src/                    # Core source code
-│   ├── preprocessing/      # Data pipelines
-│   ├── modeling/           # Model architectures
-│   └── evaluation/         # Metrics and analysis
+│   ├── feature_extraction.py    # Feature extraction utilities
+│   ├── DATA_INSTRUCTIONS.md
+│   ├── .ipnyb_checkpoints/
+│   ├── src/                 
+│   │   ├── telepath/
+│   │   ├── telepath.egg-info/
+│   │   └── temp_audio_chunks/
+│   ├── pca_data/
+│   ├── loaders.py            # loading (fmri, audio, text, visual)
+│   ├── preprocessors.py      # preprocessing
+│   ├── transforms.py         # transformations
+│   ├── fmri/                    # fMRI data
+│   ├── audio/                   # Audio samples
+│   ├── transcripts/             # Text corpora
+│   └── visual/                  # Image/video data
+├── models/                    # Classifier implementations
+│   ├── base_classifier.py    # Abstract base class
+│   ├── classical/            # Traditional ML methods
+│   │   ├── svm.py
+│   │   ├── random_forest.py
+│   │   └── logistic_regression.py
+│   ├── neural/               # Neural network methods
+│   │   ├── mlp.py
+│   │   ├── cnn.py
+│   │   ├── lstm.py
+│   │   └── transformer.py
+│   └── ensemble/             # Ensemble methods
+│       ├── voting.py
+│       └── stacking.py
+├── utils/                     # Utility functions
+│   ├── metrics.py            # Evaluation metrics
+│   ├── visualization.py     # Plotting functions
+│   └── io_utils.py          # I/O operations
+├── experiments/              # Experiment management
+│   ├── experiment_runner.py
+│   └── hyperparameter_search.py
+├── .gitignore              # File control
 ├── docs/                   # Technical documentation
 ├── tests/                  # Unit and integration tests
 └── LICENSE.md
 ```
+
 
 -------------------------
 
@@ -198,6 +130,7 @@ python src/main.py --modality all --config configs/default.yaml
 ```
 
 ### Key Arguments
+
 - `--modality`: Choose `audio`, `text`, `visual`, or `all`
 - `--config`: Path to YAML configuration file
 
@@ -218,20 +151,32 @@ jupyter lab notebooks/
 
 ## 👥 Team
 
-- [Jane Doe](https://github.com/janedoe) - Data Pipelines
-- [John Smith](https://github.com/johnsmith) - Model Architecture
-- [Alex Chen](https://github.com/alexchen) - Evaluation Metrics
-- [Maria Garcia](https://github.com/mariagarcia) - Deployment
+- [Maria Lagakos](https://github.com/marialagakos) - Feature Extraction
+- [Sophie Strassmann](https://github.com/sophiestrazie) - Creative Director, Pipeline Architecture, and Classification Team
+- [Yujie Chen](https://github.com/huricaneee) - Classification Team
+- [Keyu Liang](https://github.com/Keyu17) - Feature Extraction and Data Migration
+- [Maria Gallamoso](https://github.com/mariagarcia) - Feature Extraction Team
+- [Catherina Medeiros](https://github.com/cathmedeiros) Director of Imaging, Feature Extraction Team
+
 
 ## 📜 License
+
 This project is licensed under the **MIT License** - see [LICENSE.md](LICENSE.md) for details.
 
 ## 🙏 Acknowledgments
 
 We gratefully acknowledge:
 
-- The AI4Good Lab Montreal organizers
-- Our project mentors and TAs.... 
-- Compute Canada for providing advanced computing resources
+- **Jennifer Addison** and **Yosra Kazemi** for their expertise and leadership
+- The AI4Good Lab Montreal and Mila team for their support
+- Our TA **Hugo Berard** and **Laetitia Constantin**
 
+Consulting Scholars and Mentors:
 
+- Rose Landry - Mila
+- Adel Halawa - McGill University
+- Dr. Lune Bellec - Université de Montréal
+- Dr. Mayada Elsabbagh - Transforming Autism Care Consortium
+- The Algonauts Project
+- Compute Canada for their computational resources
+- The Digital Research Alliance of Canada

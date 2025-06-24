@@ -13,14 +13,21 @@ algonauts_2025/
 # Ignore Jupyter checkpoints
 .ipynb_checkpoints/
 
+# ignore datasets 
+data/pca_data/
+
+# ignore environment files
 *.pyc
 .env/
-
+.cere-env
 venv/
 
 multimodal_stimulus_fmri_prediction.egg-info/
 brain-env/
 .env/ 
-scripts/strass-branch/secrets-env-do.py/
+
 #data/
 *.egg-info/
+
+# ignore other random files
+AI4Good-MTL-Group-2 Depricated/
