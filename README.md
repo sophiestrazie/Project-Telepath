@@ -6,7 +6,7 @@
 
 *AI4Good Lab @Mila • Montreal 2025 Cohort*
 
-## 🌟 Project Overview
+## 🔍 Project Overview
 
 Project Cere develops **multimodal machine learning models** that integrate visual, textual, and audio data to address pressing social challenges. This repository contains our codebase, experiments, and documentation for creating interpretable AI systems with real-world impact.
 
