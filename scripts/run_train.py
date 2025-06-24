@@ -12,11 +12,11 @@ subject = 1
 modality = "all"
 window_size = 10
 stride = 5
-batch_size = 4
+batch_size = 128
 
 # Train/val split
-train_episodes = [f"s0{season}e{episode:02d}{half}" for season in range(1, 5) for episode in range(1, 25) for half in ['a', 'b']]
-val_episodes = [f"s05e{episode:02d}{half}" for episode in range(1, 25) for half in ['a', 'b']]
+train_episodes = [f"s01e{episode:02d}{half}" for episode in range(1, 25) for half in ['a', 'b']]
+val_episodes = [f"s02e{episode:02d}{half}" for episode in range(1, 13) for half in ['a', 'b']]
 
 # Load data
 train_loader = prepare_and_save_aligned_data(

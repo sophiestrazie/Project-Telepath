@@ -7,26 +7,60 @@ from torch.utils.data import DataLoader, Dataset
 from scipy.stats import pearsonr
 
 
+# def load_stimulus_features(root_data_dir, modality, selected_episodes=None):
+#     features = {}
+
+#     def load_filtered_feature_file(path, selected):
+#         all_feats = np.load(path, allow_pickle=True).item()
+#         if selected is None:
+#             return all_feats
+#         return {k: v for k, v in all_feats.items() if k in selected}
+
+#     if modality in ['visual', 'all']:
+#         path = os.path.join(root_data_dir, 'stimulus_features', 'pca', 'friends_movie10', 'visual', 'features_train.npy')
+#         features['visual'] = load_filtered_feature_file(path, selected_episodes)
+
+#     if modality in ['audio', 'all']:
+#         path = os.path.join(root_data_dir, 'stimulus_features', 'pca', 'friends_movie10', 'audio', 'features_train.npy')
+#         features['audio'] = load_filtered_feature_file(path, selected_episodes)
+
+#     if modality in ['language', 'all']:
+#         path = os.path.join(root_data_dir, 'stimulus_features', 'pca', 'friends_movie10', 'language', 'features_train.npy')
+#         features['language'] = load_filtered_feature_file(path, selected_episodes)
+
+#     return features
+
 def load_stimulus_features(root_data_dir, modality, selected_episodes=None):
+    """
+    Load stimulus features from a structured HDF5 file.
+
+    Args:
+        h5_path (str): Path to features_Imagebind.h5
+        modality (str): One of 'vision', 'audio', 'text', or 'all'
+        selected_episodes (list[str] or None): Optional filter on episode keys
+
+    Returns:
+        dict: {modality: {episode: np.ndarray of shape [T, D]}}
+    """
     features = {}
 
-    def load_filtered_feature_file(path, selected):
-        all_feats = np.load(path, allow_pickle=True).item()
-        if selected is None:
-            return all_feats
-        return {k: v for k, v in all_feats.items() if k in selected}
+    h5_path = os.path.join(root_data_dir, 'features', 'features_Imagebind.h5')
 
-    if modality in ['visual', 'all']:
-        path = os.path.join(root_data_dir, 'stimulus_features', 'pca', 'friends_movie10', 'visual', 'features_train.npy')
-        features['visual'] = load_filtered_feature_file(path, selected_episodes)
+    with h5py.File(h5_path, 'r') as f:
+        available_modalities = list(f.keys())
 
-    if modality in ['audio', 'all']:
-        path = os.path.join(root_data_dir, 'stimulus_features', 'pca', 'friends_movie10', 'audio', 'features_train.npy')
-        features['audio'] = load_filtered_feature_file(path, selected_episodes)
+        if modality == "all":
+            modalities = available_modalities
+        elif modality in available_modalities:
+            modalities = [modality]
+        else:
+            raise ValueError(f"Modality '{modality}' not found in file. Available: {available_modalities}")
 
-    if modality in ['language', 'all']:
-        path = os.path.join(root_data_dir, 'stimulus_features', 'pca', 'friends_movie10', 'language', 'features_train.npy')
-        features['language'] = load_filtered_feature_file(path, selected_episodes)
+        for mod in modalities:
+            features[mod] = {}
+            for ep_key in f[mod].keys():
+                if selected_episodes is None or ep_key in selected_episodes:
+                    features[mod][ep_key] = f[f"{mod}/{ep_key}"][:]
 
     return features
 
