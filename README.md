@@ -10,6 +10,16 @@
 
 Project Cere develops **multimodal machine learning models** that integrate visual, textual, and audio data to address pressing social challenges. This repository contains our codebase, experiments, and documentation for creating interpretable AI systems with real-world impact.
 
+## ✨ Features
+
+- **Modular Architecture**: Easy to extend with new classifiers
+- **Multiple Classifier Types**: Classical ML, Neural Networks, and Ensemble methods
+- **Flexible Data Pipeline**: Support for various fMRI data formats
+- **Comprehensive Evaluation**: Cross-validation, metrics, and visualization
+- **Hyperparameter Optimization**: Built-in grid search capabilities
+- **Experiment Management**: YAML-based configuration system
+- **Extensible Design**: Factory pattern for seamless classifier addition
+
 ## 📋 Table of Contents
 
 - [Installation](#-installation)
@@ -107,15 +117,6 @@ Project-Cere/
 └── LICENSE.md
 ```
 
-## ✨ Features
-
-- **Modular Architecture**: Easy to extend with new classifiers
-- **Multiple Classifier Types**: Classical ML, Neural Networks, and Ensemble methods
-- **Flexible Data Pipeline**: Support for various fMRI data formats
-- **Comprehensive Evaluation**: Cross-validation, metrics, and visualization
-- **Hyperparameter Optimization**: Built-in grid search capabilities
-- **Experiment Management**: YAML-based configuration system
-- **Extensible Design**: Factory pattern for seamless classifier addition
 
 -------------------------
 
