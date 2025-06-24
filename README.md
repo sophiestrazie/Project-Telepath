@@ -4,7 +4,7 @@
 
 #### Multimodal AI for Social Good
 
-*AI4Good Lab Montreal • 2025 Cohort*
+*AI4Good Lab @Mila • Montreal 2025 Cohort*
 
 ## 🌟 Project Overview
 
