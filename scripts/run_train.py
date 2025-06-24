@@ -59,7 +59,7 @@ output_dim = example_fmri.shape[-1]
 
 
 # Initialize model
-config = Config(input_dim=input_dim, output_dim=output_dim)
+config = Config(input_dim=input_dim, output_dim=output_dim, window_size= window_size, stride=stride)
 model = FMRITransformerModel(config).to(config.device)
 optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
 
