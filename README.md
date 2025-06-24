@@ -169,7 +169,7 @@ We gratefully acknowledge:
 
 - **Jennifer Addison** and **Yosra Kazemi** for their expertise and leadership
 - The AI4Good Lab Montreal and Mila team for their support
-- 
+- Our TA **Hugo Berard** and **Laetitia Constantin**
 
 Consulting Scholars and Mentors:
 
