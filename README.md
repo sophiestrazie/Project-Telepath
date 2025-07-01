@@ -68,6 +68,36 @@ Project Cere develops **multimodal machine learning models** that integrate visu
    pip install -r requirements.txt  # Optional: Full dependency install
    ```
 
+Here’s a concise **team onboarding guide** and your **personal command cheat sheet** for working with this repository:
+
+
+### **Creating A Fork**
+
+1. **Fork the Repository**  
+   - Each member creates a personal fork:  
+     - Go to [github.com/marialagakos/AI4Good-MTL-Group-2](https://github.com/marialagakos/AI4Good-MTL-Group-2) → Click **"Fork"** (top-right).
+
+2. **Clone Your Fork**  
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/AI4Good-MTL-Group-2.git
+   cd AI4Good-MTL-Group-2
+   ```
+
+3. **Set Up Remotes**  
+   ```bash
+   git remote add upstream https://github.com/marialagakos/AI4Good-MTL-Group-2.git
+   git remote -v  # Verify: origin=your fork, upstream=original
+   ```
+
+4. **Sync with Upstream**  
+   ```bash
+   git fetch upstream
+   git checkout main
+   git merge upstream/main
+   git push origin main  # Keep your fork updated
+   ```
+
+
 ## 📂 Repository Structure
 
 ```
@@ -139,6 +169,64 @@ python src/main.py --modality all --config configs/default.yaml
 ```bash
 jupyter lab notebooks/
 ```
+
+
+### **Maintaining Forks**  
+
+#### **1. Start a New Feature**  
+```bash
+git checkout -b feature/your-feature-name  # e.g., feature/login-form
+```
+
+#### **2. Commit & Push to Your Fork**  
+```bash
+git add .
+git commit -m "Description of changes"
+git push -u origin feature/your-feature-name
+```
+
+#### **3. Sync with Upstream**  
+```bash
+git checkout main
+git fetch upstream
+git merge upstream/main  # Or use `git rebase upstream/main`
+git push origin main
+```
+
+#### **4. Update Your Feature Branch**  
+```bash
+git checkout feature/your-feature-name
+git rebase main  # Apply your changes on top of latest updates
+git push --force  # Only if you've rebased
+```
+
+#### **5. Create a Pull Request (PR)**  
+1. Go to your fork on GitHub.  
+2. Click **"Compare & Pull Request"** for your branch.  
+3. Target `marialagakos/AI4Good-MTL-Group-2:main` as the base.
+
+---
+
+### **Key Rules for the Team**  
+- **Never push directly to `upstream`** (only PRs).  
+- **Always branch from `main`** (no direct commits to `main`).  
+- **Rebase instead of merge** to keep history clean (use `git rebase main`).  
+
+
+### **Troubleshooting**  
+
+- **Permission denied?**  
+  ```bash
+  git remote set-url origin https://github.com/YOUR-USERNAME/AI4Good-MTL-Group-2.git
+  ```  
+- **Broken branch?**  
+  ```bash
+  git checkout main
+  git branch -D broken-branch
+  ```  
+
+Print this or save it as a text file! Need a visual workflow diagram? Let me know.
+
 
 ## 🗺️ Project Roadmap
 
